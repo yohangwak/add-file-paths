@@ -275,13 +275,62 @@ def add_file_path_comment(file_path, base_dir):
 
         # Choose comment style based on file extension
         ext = os.path.splitext(file_path)[1].lower()
-        comment_char = '#' if ext in {
+        
+        # Hash-style comments (#)
+        hash_comments = {
             '.py', '.rb', '.sh', '.yml', '.yaml', '.conf',
-            '.toml', '.ini'  # Additional config file types
-        } else '//'
+            '.toml', '.ini', '.perl', '.pl', '.pm',
+            '.r', '.rake', '.ruby', '.coffee'
+        }
+        
+        # Double-slash comments (//)
+        slash_comments = {
+            '.js', '.jsx', '.ts', '.tsx', '.mjs',
+            '.java', '.scala', '.kt', '.kts',  # Java/Kotlin
+            '.cpp', '.c', '.h', '.hpp', '.cs',  # C-family
+            '.swift', '.go', '.rs',  # Swift/Go/Rust
+            '.php',  # PHP can use both // and #
+            '.dart',  # Dart
+            '.groovy', '.gvy', '.gy', '.gsh',  # Groovy
+            '.vue', '.svelte',  # Web frameworks
+        }
+        
+        # CSS-style comments (/* */)
+        css_style_comments = {
+            '.css', '.scss', '.sass', '.less',
+            '.styl', '.pcss',  # Stylus and PostCSS
+        }
+        
+        # HTML-style comments (<!-- -->)
+        html_style_comments = {
+            '.html', '.htm', '.xml', '.xaml',
+            '.svg', '.astro', '.jsp', '.asp',
+            '.aspx', '.cshtml', '.vbhtml',
+        }
+        
+        # Choose the appropriate comment style
+        if ext in hash_comments:
+            comment_start = '#'
+            comment_end = ''
+        elif ext in slash_comments:
+            comment_start = '//'
+            comment_end = ''
+        elif ext in css_style_comments:
+            comment_start = '/*'
+            comment_end = ' */'
+        elif ext in html_style_comments:
+            comment_start = '<!--'
+            comment_end = ' -->'
+        else:
+            # Default to // for unknown file types
+            comment_start = '//'
+            comment_end = ''
 
-        # Consider adding a blank line after the comment for better readability
-        new_content = f'{comment_char} {normalized_path}\n\n{content}'
+        # Use the appropriate comment style
+        if comment_end:
+            new_content = f'{comment_start} {normalized_path}{comment_end}\n{content}'
+        else:
+            new_content = f'{comment_start} {normalized_path}\n{content}'
         
         # Write with detected encoding
         with open(file_path, 'w', encoding=encoding, newline='') as file:
