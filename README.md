@@ -1,16 +1,34 @@
 # add-file-paths
 
-A Python utility that automatically adds file path comments to the beginning of source files in a project. This tool helps developers maintain better code organization by clearly identifying file locations within a codebase.
+A Python utility that automatically adds file path comments to the beginning of source files in a project. This tool helps developers maintain better code organization by clearly identifying file locations within a codebase and enhances AI tools' understanding of your project structure.
 
 ## Features
 
 - 📝 Adds file path comments to the beginning of source files
+- 🤖 Improves AI code assistance by providing clear file context
 - 🎯 Smart detection of appropriate comment style (`//` or `#`) based on file type
 - 🚫 Comprehensive ignore lists for directories, files, and extensions
 - 💾 Automatic backup creation before modifying files
 - 🔍 Binary file detection and skipping
 - 📊 Processing summary with statistics
 - 🖥️ GUI folder selection (if tkinter is available) with CLI fallback
+
+## Why Use File Path Comments?
+
+### For Developers
+- Quickly identify file locations when viewing code snippets
+- Easier navigation in large codebases
+- Better context when reviewing pull requests
+- Helpful for documentation and code reviews
+
+### For AI Tools
+- Provides crucial context for AI code assistants
+- Helps AI better understand project structure
+- Improves AI's ability to:
+  - Generate relevant code suggestions
+  - Understand file relationships
+  - Provide more accurate recommendations
+  - Navigate and reference project files
 
 ## Installation
 
@@ -71,6 +89,18 @@ The script includes several configuration sets that can be modified:
 - Handles multiple file encodings
 - Size limit checks (skips files > 10MB)
 - Restores from backup if any errors occur
+
+## AI Integration Tips
+
+When using this tool with AI assistants:
+
+1. Run the tool before sharing code with AI
+2. Include file path comments when pasting code snippets
+3. The path context helps AI:
+   - Understand the file's role in your project
+   - Make more relevant suggestions
+   - Reference related files accurately
+   - Maintain proper import paths
 
 ## Limitations
 
