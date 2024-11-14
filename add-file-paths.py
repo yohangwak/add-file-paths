@@ -328,9 +328,9 @@ def add_file_path_comment(file_path, base_dir):
 
         # Use the appropriate comment style
         if comment_end:
-            new_content = f'{comment_start} {normalized_path}{comment_end}\n{content}'
+            new_content = f'{comment_start} {normalized_path}{comment_end}\n\n{content}'
         else:
-            new_content = f'{comment_start} {normalized_path}\n{content}'
+            new_content = f'{comment_start} {normalized_path}\n\n{content}'
         
         # Write with detected encoding
         with open(file_path, 'w', encoding=encoding, newline='') as file:
