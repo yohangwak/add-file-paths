@@ -31,7 +31,10 @@ IGNORED_DIRS = {
     '.vercel',
     'vendor',
     'temp',
-    'tmp'
+    'tmp',
+    '.svn',
+    '.hg',
+    'node_modules.cache'
 }
 
 IGNORED_FILES = {
@@ -109,7 +112,11 @@ TEXT_FILE_EXTENSIONS = {
     '.md', '.mdx', '.txt',
     '.sh', '.bash', '.zsh',
     '.env',
-    '.vue', '.svelte'  # Added more web frameworks
+    '.vue', '.svelte', 
+    '.astro',
+    '.php',
+    '.rs',
+    '.go'
 }
 
 def select_directory():
@@ -214,7 +221,7 @@ def cleanup_backup(file_path):
         print(f"Warning: Failed to clean up backup for {file_path}: {str(e)}")
         return False
 
-def add_file_path_comment(file_path):
+def add_file_path_comment(file_path, base_dir):
     """Add file path comment to the beginning of a file"""
     try:
         # Create backup first
@@ -246,16 +253,17 @@ def add_file_path_comment(file_path):
             print(f'Skipping empty file: {file_path}')
             return False
         
-        # Convert path to use forward slashes for consistency
-        normalized_path = str(Path(file_path)).replace('\\', '/')
+        # Convert path to relative path from the selected directory
+        rel_path = os.path.relpath(file_path, base_dir)
+        normalized_path = str(Path(rel_path)).replace('\\', '/')
         
-        # Check for existing file path comment more thoroughly
+        # Check for existing file path comment
         first_line = content.split('\n')[0].strip() if content else ''
         
         # Check various comment formats
         existing_comments = [
-            f'// File: {normalized_path}',
-            f'# File: {normalized_path}',
+            f'// {normalized_path}',
+            f'# {normalized_path}',
             '// File:',  # Partial match
             '# File:',   # Partial match
         ]
@@ -267,9 +275,13 @@ def add_file_path_comment(file_path):
 
         # Choose comment style based on file extension
         ext = os.path.splitext(file_path)[1].lower()
-        comment_char = '#' if ext in {'.py', '.rb', '.sh', '.yml', '.yaml', '.conf'} else '//'
+        comment_char = '#' if ext in {
+            '.py', '.rb', '.sh', '.yml', '.yaml', '.conf',
+            '.toml', '.ini'  # Additional config file types
+        } else '//'
 
-        new_content = f'{comment_char} File: {normalized_path}\n{content}'
+        # Consider adding a blank line after the comment for better readability
+        new_content = f'{comment_char} {normalized_path}\n\n{content}'
         
         # Write with detected encoding
         with open(file_path, 'w', encoding=encoding, newline='') as file:
@@ -311,7 +323,7 @@ def process_directory(directory):
                 file_path = os.path.join(root, file)
                 if should_process_file(file, file_path):
                     try:
-                        if add_file_path_comment(file_path):
+                        if add_file_path_comment(file_path, directory):
                             print(f'Added path comment to: {file_path}')
                             files_processed += 1
                         else:
