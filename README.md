@@ -66,7 +66,7 @@ function hello() {
 
 After:
 ```javascript
-// File: src/utils/hello.js
+// src/utils/hello.js
 function hello() {
     console.log("Hello, world!");
 }
