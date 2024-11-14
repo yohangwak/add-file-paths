@@ -1,4 +1,4 @@
-# add-file-paths
+# Add File Paths
 
 A Python utility that automatically adds file path comments to the beginning of source files in a project. This tool helps developers maintain better code organization by clearly identifying file locations within a codebase and enhances AI tools' understanding of your project structure.
 
